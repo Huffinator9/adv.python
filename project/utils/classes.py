@@ -1,0 +1,116 @@
+# src: ./utils/classes.py
+
+import random
+
+# Base Character class
+class Character:
+    def __init__(self, name, health, attack_power):
+        self.name = name
+        self.health = health
+        self.attack_power = attack_power
+        self.max_health = health  
+
+    def attack(self, opponent):
+        damage = self.attack_power + random.randint(-3, 3)
+        damage = max(1, damage)
+        opponent.health -= damage
+        print(f"{self.name} attacks {opponent.name} for {damage} damage!")
+        if opponent.health <= 0:
+            print(f"{opponent.name} has been defeated!")
+
+    def heal(self):
+        heal_amount = 20
+        self.health = min(self.max_health, self.health + heal_amount)
+        print(f"{self.name} heals for {heal_amount}! Health is now {self.health}/{self.max_health}.")
+
+    def display_stats(self):
+        print(f"{self.name}'s Stats - Health: {self.health}/{self.max_health}, Attack Power: {self.attack_power}")
+
+# Warrior class (inherits from Character)
+class Warrior(Character):
+    def __init__(self, name):
+        super().__init__(name, health=140, attack_power=20)
+
+    def special_ability01(self, opponent):
+        damage = self.attack_power + 15
+        opponent.health -= damage
+        print(f"{self.name} uses SPIN SLASH for {damage} damage!")
+
+    def special_ability10(self, opponent):
+        damage = self.attack_power + 20
+        opponent.health -= damage
+        print(f"{self.name} uses DOUBLE SLASH for {damage} damage!")
+
+# Mage class (inherits from Character)
+class Mage(Character):
+    def __init__(self, name):
+        super().__init__(name, health=100, attack_power=35)
+
+    def special_ability01(self, opponent):
+        damage = self.attack_power + 10
+        opponent.health -= damage
+        print(f"{self.name} casts FIREBALL for {damage} damage!")
+
+    def special_ability10(self, opponent):
+        damage = self.attack_power + 10
+        opponent.health -= damage
+        print(f"{self.name} casts ICEBALL for {damage} damage!")
+
+# Archer class (inherits from Character)
+class Archer(Character):
+    def __init__(self, name):
+        super().__init__(name, health=110, attack_power=25)
+
+    def special_ability01(self, opponent):
+        crit_chance = random.randint(1, 100)
+        if crit_chance <= 30:
+            damage = self.attack_power * 3
+            print(f"CRITICAL HIT! {self.name} lands a PERFECT ARROW for {damage} damage!")
+        else:
+            damage = self.attack_power + 25
+            print(f"{self.name} uses DOUBLE SHOT for {damage} damage!")
+            opponent.health -= damage
+
+    def special_ability10(self, opponent):
+        damage = self.attack_power + 15
+        opponent.health -= damage
+        print(f"{self.name} uses POWER SHOT for {damage} damage!")
+
+# Paladin class  (inherits from Character)
+class Paladin(Character):
+    def __init__(self, name):
+        super().__init__(name, health=160, attack_power=15)
+
+    def special_ability01(self, opponent):
+        heal_amount = 15
+        self.health = min(self.max_health, self.health + heal_amount)
+        print(f"{self.name} calls upon DIVINE LIGHT, healing {heal_amount} and striking {opponent.name} for 25 damage!")
+        opponent.health -= 25
+
+    def special_ability10(self, opponent):
+        damage = self.attack_power + 15
+        opponent.health -= damage
+        print(f"{self.name} uses SHIELD BASH for {damage} damage!")
+
+# EvilWizard class (inherits from Character)
+class EvilWizard(Character):
+    def __init__(self, name):
+        super().__init__(name, health=150, attack_power=15)
+
+    def regenerate(self):
+        self.health = min(self.max_health, self.health + 5)
+        print(f"{self.name} regenerates 5 health! Current health: {self.health}")
+        
+    def fireball(self, opponent):
+        damage = 30
+        opponent.health -= damage
+        print(f"{self.name} unleashes FIREBALL! {opponent.name} takes {damage} damage!")
+
+    def take_turn(self, opponent):
+        action = random.choice(["attack", "regenerate", "fireball"])
+        if action == "attack":
+            self.attack(opponent)
+        if action == "regenerate":
+            self.regenerate()
+        if action == "fireball":
+            self.fireball(opponent)
